@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Server Landing Page</title>
+    <style>
+        .box{
+            padding: 4rem;
+            animation: rotateMe 4s infinite;
+            transition-timing-function: ease-in-out;
+            width: 200px;
+            height: 200px;
+            }
+
+        /*Define the keyframe*/
+        @keyframes rotateMe{
+            0% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(180deg);
+            }
+            100% {
+                transform: rotate(365deg);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Hi!!!</h1>
+    <div class="box"><img src="https://www.mementotech.in/assets/images/icons/express.png"></div>
+    
+</body>
+</html>
