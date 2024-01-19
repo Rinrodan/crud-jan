@@ -1,5 +1,5 @@
 
-import Login from "./login";
+import Login, { LogOut } from "./login";
 import logo from "./logo.png";
 
 
@@ -13,6 +13,7 @@ export default function Header() {
             <div class="col"></div>
             <div classs="col">
             {/* <Login /> */}
+            <LogOut />
             </div>
 
 

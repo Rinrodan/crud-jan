@@ -1,52 +1,56 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from '../App'
+import ContextManager from "./contextManager";
 
-import { LoginContext } from '../App'
+
+export const LogOut = () => {
+    const { updateUserData } = useContext(UserContext);
+
+    const handleLogOut = () => { updateUserData({}) }
+    return (<button onClick={handleLogOut}>LOG OUT</button>)
+}
 
 
-export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const { userData, setUserData } = useContext(LoginContext);
-    const Navigate = useNavigate();
-// console.log("login.js logincontext", LoginContext)
-    // const userDataTest = useContext(LoginContext);
+function Login(props) {
+    const {userData, setUserData} = useContext(UserContext);
+    const [userName, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const propUserData = props.data
+    console.log("login.js Userdata from prop", propUserData)
+    console.log("login.js Userdata from context", userData)
 
-    // console.log("login.js login context", userDataTest);
-    // const LoginContext = createContext({
-    //     userdata: {},
-    //     setUserData: () => {}
-    //   });
-
-    const handleSignIn = (e) => {
-        e.preventDefault();
+    const handleLogin = async () => {
+        const Navigate = useNavigate;
         fetch('http://localhost:4000/login', {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            username: username,
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({
+            username: userName,
             password: password
-          })
+            })
         })
-          .then(res => res.json()
-          )
-          .then(data => {
-            
-            if (data.username)  Navigate(`/userdashboard/${data.username}`)
-            else alert("YOU HAVE FAILED TO LOG IN")
-          })
-        }
+            .then(res => res.json()
+            )
+            .then(data => {
+            // ContextManager({data})
+        
+                if (data.username){  
+                    props.updateUserData(data);
+                    // Navigate(`/userdashboard/${data.username}`)
+                }
+                else {alert("YOU HAVE FAILED TO LOG IN")}
+            })
 
+    }
 
-
-
+    
     return (
-
         <div class="page ">
             <div class="col-md-12 m-auto">
                 <div class="row col-md-12 py-4"></div>
                 <div class="col pb-4"></div>
-                <form onSubmit={handleSignIn} class="input-group m-auto col-md-6">
+                <div class="input-group m-auto col-md-6">
                     <input 
                         type="text" 
                         class="form-control" 
@@ -54,7 +58,7 @@ export default function Login() {
                         aria-label="username" 
                         aria-describedby="button-addon1"
                         id="username"
-                        value={username}
+                        value={userName}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
@@ -73,22 +77,39 @@ export default function Login() {
                     <button 
                         class="btn btn-outline-dark bg-primary" 
                         type="submit" 
-                        id="button-addon3">sign-in
+                        id="button-addon3"
+                        onClick={handleLogin} >sign-in
                     </button>
-                    </form>
+                    </div>
                 <div class="col"></div>
 
                 <div>
-                    <h2>Current UserData: {userData}</h2>
-                    <p>Click button to change to testUserName</p>
-
-                    <button onClick={() => setUserData({"username": "testUserName"})}>
-                        Switch UserData (Current: {userData})
-                    </button>
+                    <div class="h3 m-3">Current UserData: <span class="h1 bg-info">"{userData.username}"</span> </div>
+      
                 </div>
 
             </div>
         </div>
     
-    )
+    );
 }
+
+  
+function LoginWithContext() {
+    return (
+        <UserContext.Consumer>
+        {({ updateUserData }) => (
+            <>
+            <Login updateUserData={updateUserData} />
+            <LogOut updateUserData={updateUserData} />
+            </>
+        )}
+        </UserContext.Consumer>
+    );
+    }
+          
+
+
+
+
+export default LoginWithContext;
