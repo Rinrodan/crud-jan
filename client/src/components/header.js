@@ -1,5 +1,5 @@
 
-import Login, { LogOut } from "./login";
+import Login, { LogOut } from "./pages/landing/login";
 import logo from "./logo.png";
 
 

@@ -1,48 +1,54 @@
-import { createContext, useContext, useState } from "react";
+import {useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from '../App'
-import ContextManager from "./contextManager";
+import { UserContext } from '../../../App'
+
 
 
 export const LogOut = () => {
-    const { updateUserData } = useContext(UserContext);
+    const navigate = useNavigate();
+    const { userData, updateUserData } = useContext(UserContext);
 
-    const handleLogOut = () => { updateUserData({}) }
-    return (<button onClick={handleLogOut}>LOG OUT</button>)
+    const handleLogOut = () => {
+         updateUserData({}) 
+         navigate("/");
+         
+         alert("logged out");
+        }
+    const shouldShowLogout = userData && Object.keys(userData).length > 3;
+
+    return (
+        <>
+            {shouldShowLogout && <button onClick={handleLogOut}>LOG OUT</button>}
+        </>
+    )
 }
 
 
-function Login(props) {
-    const {userData, setUserData} = useContext(UserContext);
-    const [userName, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const propUserData = props.data
-    console.log("login.js Userdata from prop", propUserData)
-    console.log("login.js Userdata from context", userData)
+export const Login = () => {
+    const navigate = useNavigate();
+    const { userData, updateUserData } = useContext(UserContext);
+    const [userName, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
-        const Navigate = useNavigate;
+      
         fetch('http://localhost:4000/login', {
             method: "POST",
             headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-            username: userName,
-            password: password
+            body: JSON.stringify({ username: userName, password: password
             })
         })
-            .then(res => res.json()
-            )
+            .then(res => res.json())
             .then(data => {
-            // ContextManager({data})
-        
                 if (data.username){  
-                    props.updateUserData(data);
-                    // Navigate(`/userdashboard/${data.username}`)
+                    updateUserData(data);
+                    navigate(`/userdashboard/${data.username}`);
                 }
-                else {alert("YOU HAVE FAILED TO LOG IN")}
-            })
+                else {alert("YOU HAVE FAILED TO LOG IN")
+                }
+            });
 
-    }
+    };
 
     
     return (
@@ -82,12 +88,6 @@ function Login(props) {
                     </button>
                     </div>
                 <div class="col"></div>
-
-                <div>
-                    <div class="h3 m-3">Current UserData: <span class="h1 bg-info">"{userData.username}"</span> </div>
-      
-                </div>
-
             </div>
         </div>
     
@@ -96,6 +96,8 @@ function Login(props) {
 
   
 function LoginWithContext() {
+
+    
     return (
         <UserContext.Consumer>
         {({ updateUserData }) => (

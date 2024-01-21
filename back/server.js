@@ -21,6 +21,8 @@ app.get('/', (req, res) => {
 
 app.listen({port}, () => console.log(`Recipe app is listening on port ${port}.`));
 //\\\\\\\\\\\\\\\\\  USERS ////////////////////////////////////////////////////////
+
+//------- ALL USERS ----------
 app.get('/users', async (req, res) => {
 	try {
 	  const users = await knex('users')
@@ -31,6 +33,37 @@ app.get('/users', async (req, res) => {
 	}
   })
 
+//------- ADD USER ----------
+app.post('/users', async (req, res) => {
+	const { fname, lname, email, imageurl, username, password } = req.body;
+	console.log(req.body)
+	const newUser = {
+	  fname: fname,
+	  lname: lname,
+	  email: email,
+	  username: username,
+	  imageurl: imageurl,
+	  password: bcrypt.hashSync(password, 10)
+	}
+  
+	try {
+	  //  console.log('do we even get this far?')
+	  const addedUserResponse = await knex('users')
+		.insert(newUser)
+		.returning('*')
+  
+	  console.log('user response: ', addedUserResponse)
+  
+	  delete addedUserResponse.password
+	  // addedUserResponse = addedUserResponse.map((e) => {
+	  //   delete e.password
+	  // })
+	  res.status(201).json(addedUserResponse[0])
+	} catch (err) {
+	  res.status(500).json(err.message)
+	}
+  
+  })
 
   //\\\\\\\\\\\\\\\\\  MEASURES ////////////////////////////////////////////////////////
   app.get('/measures', async (req, res) => {
@@ -53,15 +86,40 @@ app.get('/users', async (req, res) => {
 	}
   })
   //\\\\\\\\\\\\\\\\\  INGREDIENTS ////////////////////////////////////////////////////////
+  
+ //------- ALL INGREDIENTS ----------
   app.get('/ingredients', async (req, res) => {
 	try {
-	  const fractions = await knex('ingredients')
+	  const ingredients = await knex('ingredients')
 		.select("*")
-	  res.status(201).json(fractions)
+	  res.status(201).json(ingredients)
 	} catch (err) {
 	  res.status(500).json({ message: 'Failed to retrieve ingredients data.' })
 	}
 })
+//------- ADD INGREDIENT ----------
+app.post('/ingredients', async (req, res) => {
+	const { name, measure_id, image } = req.body;
+	console.log(req.body)
+	let newIngredient = {
+		name:name,
+		measure_id:measure_id,
+		image:image
+	  }
+	try {
+	  const addedIngredientResponse = await knex('ingredients')
+		.insert(newIngredient)
+		.returning('*')
+  
+	  console.log('New Ingredient Response: ', addedIngredientResponse)
+  
+	  res.status(201).json(addedIngredientResponse[0])
+	} catch (err) {
+	  res.status(500).json(err.message)
+	}
+  
+  })
+
 
 //\\\\\\\\\\\\\\\\\\  Login  ////////////////////////////////////////////////////////////
 

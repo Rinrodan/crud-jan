@@ -2,10 +2,10 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './components/header';
-import Landing from './components/pages/landing';
-import UserDashboard from './components/pages/userDashboard';
+import Landing from './components/pages/landing/landing';
+import UserDashboard from './components/pages/dashboard/userDashboard';
 import React, { createContext, useContext, useState } from 'react';
-import ContextManager from './components/contextManager';
+
 
 
 
@@ -18,7 +18,7 @@ export const UserContext = createContext(null);
 function App() {
 
   const [loggedOn, setLoggedOn] = useState(false)
-  const [userData, setUserData] = useState({"username":"Initial User Data username"});
+  const [userData, setUserData] = useState({});
   
   const value = {userData, setUserData};
 
@@ -49,7 +49,7 @@ function App() {
       <div className="App">
         <header className="App-header">
         <Header/>
-        {/* <ContextManager updateUserdata={updateUserdata}/> */}
+
         </header>
         <main>
               <Routes>
