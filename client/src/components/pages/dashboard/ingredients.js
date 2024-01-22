@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FetchAllIngredients } from "../../Utilities/serverRequests";
+import AddIngredient from "./addNewIngredient";
 
 
 
@@ -53,7 +54,9 @@ const Ingredients = () => {
             <div class="card-header h-2">
                 Ingredients List
             </div>
+
             <div class="card-body">
+            <AddIngredient />
             {ingredientsList()}
             </div>
         </div>

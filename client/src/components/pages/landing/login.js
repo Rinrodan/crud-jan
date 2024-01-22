@@ -41,6 +41,7 @@ export const Login = () => {
             .then(res => res.json())
             .then(data => {
                 if (data.username){  
+                    console.log(data)
                     updateUserData(data);
                     navigate(`/userdashboard/${data.username}`);
                 }

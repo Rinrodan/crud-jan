@@ -20,7 +20,7 @@ const UserDashboard = () => {
                 <img src={imageurl} height="300"/>
             </div>
             <div>
-                <Ingredients />
+              <Ingredients />
                 {/* <AddIngredient /> */}
             </div>
         </div>

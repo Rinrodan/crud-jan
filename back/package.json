@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "docker start crud-bustillos && nodemon server.js",
     "docker-TERMINAL": "docker exec -it crud-bustillos psql -U mario recipedb",
     "KNEX-AllBack": "knex migrate:rollback --all",
     "KNEX-Migrate-SEED": "npx knex migrate:latest && npx knex seed:run"
